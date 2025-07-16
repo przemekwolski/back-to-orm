@@ -1,10 +1,10 @@
-CREATE SCHEMA IF NOT EXISTS back_to_orm AUTHORIZATION admin;
-
-CREATE SEQUENCE IF NOT EXISTS back_to_orm.book_seq START WITH 1 INCREMENT BY 50;
-
-CREATE TABLE book (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    author VARCHAR(255) NOT NULL,
-    price NUMERIC(19,2) NOT NULL
+CREATE SEQUENCE hibernate_sequence START WITH 1 INCREMENT BY 50;
+CREATE TABLE book
+(
+    id      bigserial primary key,
+    name    varchar(255)   not null,
+    author  varchar(255)   not null,
+    deleted boolean        not null default false,
+    price   numeric(19, 2) not null
 );
+ALTER SEQUENCE book_id_seq INCREMENT BY 50;
