@@ -1,0 +1,60 @@
+logging:
+  level:
+    org.springframework.security: DEBUG
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  main:
+    banner-mode: "off"
+  application:
+    name: back-to-orm
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+    user: ${DB_USER}
+    password: ${DB_PASS}
+    schemas: [ 'back_to_orm' ]
+    locations: classpath:db/migration
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: back_to_orm
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+---
+spring:
+  config:
+    activate:
+      on-profile: dev-flyway
+  flyway:
+    locations: classpath:db/migration/,classpath:db/sample_data/
+  jpa:
+    show-sql: true
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  h2:
+    console:
+      enabled: true
+  flyway:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: admin
+    password: admin

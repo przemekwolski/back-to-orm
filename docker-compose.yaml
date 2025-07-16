@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:14.1-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+  # server: db
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8089:8080"
+
+  backend:
+    depends_on:
+      - db
+    build:
+      context: .
+#    restart: always
+    ports:
+      - '8081:8080'
+      - '5005:5005'
+    environment:
+      DB_USER: admin
+      DB_PASS: admin
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: postgres
+      SPRING_PROFILES_ACTIVE: dev,dev-flyway
+
+volumes:
+  postgres-db:
